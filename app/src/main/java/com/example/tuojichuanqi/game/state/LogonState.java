@@ -2,17 +2,15 @@ package com.example.tuojichuanqi.game.state;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.view.MotionEvent;
-import android.widget.Toast;
 
+import com.example.tuojichuanqi.GameApplication;
 import com.example.tuojichuanqi.framework.util.Painter;
 import com.example.tuojichuanqi.framework.util.UIButton;
 import com.example.tuojichuanqi.framework.util.UIEditText;
 import com.example.tuojichuanqi.game.main.GameMainActivity;
-import com.example.tuojichuanqi.game.main.GameView;
 import com.example.tuojichuanqi.game.main.LogonAssets;
 
 public class LogonState extends State {
@@ -70,15 +68,10 @@ public class LogonState extends State {
     @Override
     public boolean onTouch(MotionEvent e, int scaledX, int scaledY) {
         if (e.getAction() == MotionEvent.ACTION_DOWN) {
-            System.out.println("usename1="+GameMainActivity.UN_AND_PSW.getString("usename",null));
-            System.out.println("usename2="+usename.getInputBuilder().toString());
-            System.out.println("password1="+GameMainActivity.UN_AND_PSW.getString("password",null));
-            System.out.println("password2="+password.getInputBuilder().toString());
             if (LogonButton.getButtonRect().contains(scaledX,scaledY)){
-                if (GameMainActivity.UN_AND_PSW.getString("usename", null).equals(usename.getInputBuilder().toString())
-                        && GameMainActivity.UN_AND_PSW.getString("password", null).equals(password.getInputBuilder().toString())) {
-                    //System.out.println(GameMainActivity.PlayerFile+" PlayerFile");
-                    //GameMainActivity.PlayerFile=Activity.getSharedPreferences(usename.getInputBuilder().toString(), Activity.MODE_PRIVATE);
+                String psw = GameMainActivity.UN_AND_PSW.getString(usename.getInputBuilder().toString(), null);
+                if (null != psw && psw.equals(password.getInputBuilder().toString())) {
+                    GameMainActivity.PlayerFile= GameApplication.getContext().getSharedPreferences(usename.getInputBuilder().toString(), Activity.MODE_PRIVATE);
                     setCurrentState(new LoadState(this,new MenuState()));
                 }else {
                     //显示账号密码不正确
@@ -110,14 +103,13 @@ public class LogonState extends State {
                 register_usename.writingClose();
                 if (register_usename.getInputBuilder().length()==0||register_PSW.getInputBuilder().length()==0){
                     //Toast.makeText(GameMainActivity.,"+++++",Toast.LENGTH_LONG).show();
-
                     return true;
                 }else {
                     //写入存档
                     SharedPreferences.Editor editor=GameMainActivity.UN_AND_PSW.edit();
-                    editor.putString("usename", register_usename.getInputBuilder().toString());
-                    editor.putString("password",register_PSW.getInputBuilder().toString());
-                    editor.commit();
+                    editor.putString(register_usename.getInputBuilder().toString(),register_PSW.getInputBuilder().toString());
+                    editor.apply();
+                    GameMainActivity.PlayerFile = GameApplication.getContext().getSharedPreferences(register_usename.getInputBuilder().toString(),0);
                 }
             }
             else if (!registerOpen&&usename.getInputTextRect().contains(scaledX,scaledY)){

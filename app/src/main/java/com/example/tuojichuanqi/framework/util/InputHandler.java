@@ -1,5 +1,6 @@
 package com.example.tuojichuanqi.framework.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +16,7 @@ public class InputHandler implements View.OnTouchListener {
     public void setCurrentState(State currentState) {
         this.currentState=currentState;
     }
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int scaledX=(int)((event.getX()/v.getWidth())*GameMainActivity.GAME_WIDTH);

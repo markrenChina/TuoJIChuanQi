@@ -1,12 +1,8 @@
 package com.example.tuojichuanqi.framework.util;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.widget.EditText;
-
-
 
 
 public class UIEditText  {
